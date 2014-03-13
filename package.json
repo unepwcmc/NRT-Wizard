@@ -1,0 +1,11 @@
+{
+  "name": "NRT-Instance",
+  "version": "0.0.1",
+  "description": "NRT Instance Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha"
+  },
+  "author": "UNEP-WCMC",
+  "license": "ISC"
+}
