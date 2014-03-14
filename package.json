@@ -7,5 +7,10 @@
     "test": "NODE_ENV=test mocha"
   },
   "author": "UNEP-WCMC",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^1.9.0",
+    "sinon": "^1.9.0",
+    "underscore": "^1.6.0"
+  }
 }

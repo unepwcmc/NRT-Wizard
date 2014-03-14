@@ -10,7 +10,7 @@ NRT Wizard should generally be installed and setup automatically, for
 example in Docker or by a provisioning script.
 
 ```bash
-npm install
+npm install -g nrt-wizard
 ```
 
 ## Modules
