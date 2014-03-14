@@ -2,7 +2,7 @@
 
 NRT Wizard is a toolset for easily creating NRT instances comprising
 of separate modules. The tools provided can be used to select modules,
-configure them and control what versions of the NRT codebase are used.
+configure them and control what version of the NRT codebase is used.
 
 ## Setup
 
