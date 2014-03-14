@@ -7,5 +7,8 @@
     "test": "NODE_ENV=test mocha"
   },
   "author": "UNEP-WCMC",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^0.4.1"
+  }
 }
