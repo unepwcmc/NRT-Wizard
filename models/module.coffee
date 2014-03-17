@@ -1,4 +1,9 @@
 fs = require 'fs'
+path = require 'path'
 
-exports.all = ->
-  JSON.parse(fs.readFileSync('../config/modules.json'))
+module.exports = class Module
+  constructor: (@attributes) ->
+
+  @all: ->
+    moduleConfigPath = path.join(__dirname, '..', 'config', 'modules.json')
+    JSON.parse(fs.readFileSync(moduleConfigPath))
