@@ -1,6 +1,5 @@
 fs = require('fs')
-Promise = require('bluebird')
-inquirer = Promise.promisifyAll(require('inquirer'))
+inquirer = require('inquirer')
 
 Module = require('../models/module')
 
@@ -9,9 +8,9 @@ exports.create = (instanceName) ->
 
   availableModules = Module.all().map( (module) -> module.attributes )
 
-  inquirer.promptAsync([{
+  inquirer.prompt([{
     type: 'checkbox'
     name: 'required_modules'
     message: 'Select the modules to import for this instance:'
     choices: availableModules
-  }]).then(->)
+  }], ->)

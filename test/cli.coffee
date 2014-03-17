@@ -14,9 +14,7 @@ test('.create creates a NRT instance directory, and asks the user which
  modules to import', ->
   availableModules = [{name: 'Reporting'}]
 
-  promptSpy = sinon.stub(inquirer, 'promptAsync', ->
-    return new Promise( (resolve) -> resolve() )
-  )
+  promptSpy = sinon.stub(inquirer, 'prompt', (options, callback) -> callback())
   promptOptions = [{
     type: 'checkbox'
     name: 'required_modules'
