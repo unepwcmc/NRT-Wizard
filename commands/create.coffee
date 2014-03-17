@@ -1,5 +1,5 @@
-fs = require('fs')
-inquirer = require('inquirer')
+fs       = require 'fs'
+inquirer = require 'inquirer'
 
 Module = require('../models/module')
 
@@ -13,4 +13,11 @@ exports.create = (instanceName) ->
     name: 'required_modules'
     message: 'Select the modules to import for this instance:'
     choices: availableModules
-  }], ->)
+  }], (answers)->
+    modulesToClone = answers.required_modules
+
+    modulesToClone.forEach( (moduleName) ->
+      module = Module.findByName(moduleName)
+      module.clone()
+    )
+  )

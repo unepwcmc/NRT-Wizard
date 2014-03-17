@@ -1,5 +1,6 @@
 assert = require('chai').assert
 sinon  = require('sinon')
+git    = require('gift')
 
 fs = require('fs')
 
@@ -32,7 +33,61 @@ test('new Module() creates a new Module instance with the given attributes', ->
   assert.property module.attributes, 'name',
     "Expected module instance to have property name"
 
-    assert.strictEqual module.attributes.name, attributes.name,
+  assert.strictEqual module.attributes.name, attributes.name,
+    "Expected module instance to have name property
+    '#{attributes.name}', but was '#{module.name}'"
+)
+
+test('#findByName returns the first module matching the given name', ->
+  availableModules = [{
+    name: 'Reporting'
+  }, {
+    name: 'Indicatorator'
+  }]
+
+  readFileStub = sinon.stub(fs, 'readFileSync', -> JSON.stringify(availableModules))
+
+  try
+    module = Module.findByName('Reporting')
+
+    assert.strictEqual module.constructor.name, "Module",
+      "Expected a Module class instance to be created"
+
+    assert.property module.attributes, 'name',
+      "Expected module instance to have property name"
+
+    assert.strictEqual module.attributes.name, availableModules[0].name,
       "Expected module instance to have name property
-      '#{attributes.name}', but was '#{module.name}'"
+      '#{availableModules[0].name}', but was '#{module.name}'"
+  finally
+    readFileStub.restore()
+)
+
+test(".clone clones the module's repository and resolves the promise", (done) ->
+  repositoryUrl = 'git.com/code'
+  destinationDir = '/destination'
+
+  module = new Module(
+    name: 'Reporting'
+    repository_url: repositoryUrl
+  )
+
+  gitCloneStub = sinon.stub(git, 'clone', (remote, dest, callback) ->
+    console.log '#### Calling git clone'
+    callback()
+  )
+
+  module.clone(destinationDir).then( (repo) ->
+    gitCloneArgs = gitCloneStub.getCall(0).args
+
+    assert.strictEqual gitCloneArgs[0], repositoryUrl,
+      "Expected git.clone to be called with the repository url"
+    assert.strictEqual gitCloneArgs[1], destinationDir,
+      "Expected git.clone to be called with the destination directory"
+
+    done()
+  ).catch( (err) ->
+    gitCloneStub.restore()
+    done(err)
+  )
 )

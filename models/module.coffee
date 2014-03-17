@@ -1,8 +1,32 @@
-fs = require 'fs'
-path = require 'path'
+_       = require 'underscore'
+fs      = require 'fs'
+git     = require 'gift'
+path    = require 'path'
+Promise = require 'bluebird'
 
 module.exports = class Module
   constructor: (@attributes) ->
+
+  clone: (destinationDir) ->
+    return new Promise( (resolve, reject) =>
+      repoUrl = @attributes.repository_url
+      git.clone(repoUrl, destinationDir, (err, repo) ->
+        return reject(err) if err?
+
+        resolve()
+      )
+    )
+
+  @moduleConfigPath: path.join(__dirname, '..', 'config', 'modules.json')
+
+  @findByName: (name) ->
+    availableModules = JSON.parse(fs.readFileSync(@moduleConfigPath))
+    moduleDefinition = _.findWhere(availableModules, name: name)
+
+    if moduleDefinition?
+      return new Module(moduleDefinition)
+    else
+      return null
 
   @all: ->
     moduleConfigPath = path.join(__dirname, '..', 'config', 'modules.json')

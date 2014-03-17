@@ -1,9 +1,11 @@
 assert  = require('chai').assert
 sinon   = require('sinon')
 Promise = require('bluebird')
+git     = require('gift')
 
 pkg = require('../package.json')
 cli = require('../cli')
+Module = require('../models/module')
 
 fs = require('fs')
 inquirer = require('inquirer')
@@ -14,7 +16,9 @@ test('.create creates a NRT instance directory, and asks the user which
  modules to import', ->
   availableModules = [{name: 'Reporting'}]
 
-  promptSpy = sinon.stub(inquirer, 'prompt', (options, callback) -> callback())
+  sandbox = sinon.sandbox.create()
+
+  promptSpy = sandbox.stub(inquirer, 'prompt', (option, callback) ->)
   promptOptions = [{
     type: 'checkbox'
     name: 'required_modules'
@@ -22,8 +26,8 @@ test('.create creates a NRT instance directory, and asks the user which
     choices: availableModules
   }]
 
-  mkdirStub = sinon.stub(fs, 'mkdirSync', ->)
-  readFileStub = sinon.stub(fs, 'readFileSync', -> JSON.stringify(availableModules))
+  mkdirStub = sandbox.stub(fs, 'mkdirSync', ->)
+  readFileStub = sandbox.stub(fs, 'readFileSync', -> JSON.stringify(availableModules))
 
   cli.create('projectName')
 
@@ -38,5 +42,30 @@ test('.create creates a NRT instance directory, and asks the user which
     assert.deepEqual promptArgs, promptOptions,
       "Expected prompt to be called with #{promptOptions}, but was called with #{promptArgs}"
   finally
-    readFileStub.restore()
+    sandbox.restore()
+)
+
+test('.create instantiates Modules and starts a git clone', ->
+  module = new Module(name: 'Reporting')
+
+  sandbox = sinon.sandbox.create()
+
+  sandbox.stub(Module, 'all', -> [module])
+  sandbox.stub(Module, 'findByName', -> module)
+
+  moduleCloneSpy = sinon.spy(module, 'clone')
+
+  sandbox.stub(git, 'clone', ->)
+  sandbox.stub(inquirer, 'prompt', (options, callback) ->
+    callback(required_modules: ['Reporting'])
+  )
+  sandbox.stub(fs, 'mkdirSync', ->)
+
+  cli.create('projectName')
+
+  try
+    assert.isTrue moduleCloneSpy.calledOnce,
+      "Expected module.clone to be called"
+  finally
+    sandbox.restore()
 )
