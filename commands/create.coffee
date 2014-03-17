@@ -7,7 +7,7 @@ Module = require('../models/module')
 exports.create = (instanceName) ->
   fs.mkdirSync(instanceName)
 
-  availableModules = Module.all()
+  availableModules = Module.all().map( (module) -> module.attributes )
 
   inquirer.promptAsync([{
     type: 'checkbox'

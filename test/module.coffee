@@ -9,11 +9,12 @@ suite('Module model')
 
 test('#all returns all modules available', ->
   expectedModules = [{name: "Reporting"}]
+  expectedModuleInstances = [new Module(expectedModules[0])]
 
   readFileStub = sinon.stub(fs, 'readFileSync', -> JSON.stringify(expectedModules))
 
   try
-    assert.deepEqual Module.all(), expectedModules
+    assert.deepEqual Module.all(), expectedModuleInstances
   finally
     readFileStub.restore()
 )

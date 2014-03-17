@@ -6,4 +6,6 @@ module.exports = class Module
 
   @all: ->
     moduleConfigPath = path.join(__dirname, '..', 'config', 'modules.json')
-    JSON.parse(fs.readFileSync(moduleConfigPath))
+    availableModules = JSON.parse(fs.readFileSync(moduleConfigPath))
+
+    return availableModules.map( (module) -> new Module(module) )

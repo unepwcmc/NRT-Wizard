@@ -12,7 +12,7 @@ suite('NRT Wizard CLI')
 
 test('.create creates a NRT instance directory, and asks the user which
  modules to import', ->
-  availableModules = ['Reporting', 'Indicatorator']
+  availableModules = [{name: 'Reporting'}]
 
   promptSpy = sinon.stub(inquirer, 'promptAsync', ->
     return new Promise( (resolve) -> resolve() )
