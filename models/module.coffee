@@ -22,6 +22,14 @@ module.exports = class Module
       )
     )
 
+  checkoutRelease: (refname) ->
+    new Promise( (resolve, reject) =>
+      @repository.checkout(refname, (err) ->
+        return reject(err) if err?
+        resolve()
+      )
+    )
+
   getReleases: ->
     return new Promise( (resolve, reject) =>
       repo = new GitHub(

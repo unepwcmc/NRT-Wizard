@@ -131,3 +131,22 @@ test('.getReleases returns a list of non-deploy releases available', (done) ->
     gitHubStub.restore()
     done(err)
 )
+
+test('.checkoutRelease checks out the given git refname', (done) ->
+  refname = 'tags/a-release'
+
+  checkoutSpy = sinon.spy( (tagName, callback) -> callback())
+  module =
+    repository:
+      checkout: checkoutSpy
+
+  Module::checkoutRelease.call(module, refname).then( ->
+    assert.isTrue checkoutSpy.calledOnce,
+      "Expected repository.checkout to be called once"
+
+    checkoutArgs = checkoutSpy.getCall(0).args
+    assert.deepEqual checkoutArgs[0], refname
+
+    done()
+  ).catch(done)
+)
