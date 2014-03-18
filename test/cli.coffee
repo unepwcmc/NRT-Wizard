@@ -45,30 +45,3 @@ test('.create creates a NRT instance directory, and asks the user which
     sandbox.restore()
 )
 
-test('.create instantiates Modules, starts a git clone and installs the module', ->
-  module = new Module(name: 'Reporting')
-
-  sandbox = sinon.sandbox.create()
-
-  sandbox.stub(Module, 'all', -> [module])
-  sandbox.stub(Module, 'findByName', -> module)
-
-  moduleCloneSpy = sinon.spy(module, 'clone')
-  moduleInstallSpy = sinon.spy(module, 'install')
-
-  sandbox.stub(git, 'clone', ->)
-  sandbox.stub(inquirer, 'prompt', (options, callback) ->
-    callback(required_modules: ['Reporting'])
-  )
-  sandbox.stub(fs, 'mkdirSync', ->)
-
-  cli.create('projectName')
-
-  try
-    assert.isTrue moduleCloneSpy.calledOnce,
-      "Expected module.clone to be called"
-    assert.isTrue moduleInstallSpy.calledOnce,
-      "Expected module.clone to be called"
-  finally
-    sandbox.restore()
-)

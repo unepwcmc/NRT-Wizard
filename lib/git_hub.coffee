@@ -9,6 +9,8 @@ module.exports = class GitHub
     new Promise( (resolve, reject) ->
       request.get(
         url: apiUrl
+        headers:
+          'User-Agent': 'NRT Wizard 2014 Home Premium Edition'
       , (err, res) ->
         return reject(err) if err?
 
