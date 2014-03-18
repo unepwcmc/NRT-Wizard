@@ -4,8 +4,10 @@ git    = require('gift')
 path   = require('path')
 
 fs = require('fs')
+Promise = require('bluebird')
 
 Module = require('../models/module')
+GitHub = require('../lib/git_hub')
 
 suite('Module model')
 
@@ -95,24 +97,37 @@ test(".clone clones the module's repository and resolves the promise", (done) ->
 
 test('.getReleases returns a list of non-deploy releases available', (done) ->
   tags = [
-    {name: '0.1'}
-    {name: '0.2'}
-    {name: 'fancy-banana-actual-change-97d374758b'}
+    '0.1'
+    '0.2'
+    'fancy-banana-actual-change-97d374758b'
   ]
 
   module =
-    repository:
-      tags: sinon.spy( (callback) ->
-        callback(null, tags)
-      )
+    attributes:
+      github:
+        username: 'itsme'
+        repository_name: 'nrt'
 
-  Module::getReleases.call(module).then( (releases) ->
-    assert.lengthOf releases, 2,
-      'Expected two releases to be returned'
+  gitHubStub = sinon.stub(GitHub::, 'releases', ->
+    new Promise( (resolve, reject) ->
+      resolve(tags)
+    )
+  )
 
-    assert.deepEqual releases, tags[0..1],
-      "Expected only non-deploy releases to be returned"
+  try
+    Module::getReleases.call(module).then( (releases) ->
+      assert.lengthOf releases, 2,
+        'Expected two releases to be returned'
 
-    done()
-  ).catch(done)
+      assert.deepEqual releases, tags[0..1],
+        "Expected only non-deploy releases to be returned"
+
+      done()
+    ).catch( (err) ->
+      gitHubStub.restore()
+      done(err)
+    )
+  catch err
+    gitHubStub.restore()
+    done(err)
 )

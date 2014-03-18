@@ -4,6 +4,8 @@ git     = require 'gift'
 path    = require 'path'
 Promise = require 'bluebird'
 
+GitHub = require '../lib/git_hub'
+
 module.exports = class Module
   constructor: (@attributes) ->
 
@@ -18,6 +20,22 @@ module.exports = class Module
         @repository = repo
         resolve(repo)
       )
+    )
+
+  getReleases: ->
+    return new Promise( (resolve, reject) =>
+      repo = new GitHub(
+        @attributes.github.username,
+        @attributes.github.repository_name
+      )
+
+      repo.releases().then( (releases) ->
+        nonDeployTags = _.reject(releases, (release) ->
+          /(.*)-[0-9a-f]{10}$/.test(release)
+        )
+
+        resolve(nonDeployTags)
+      ).catch(reject)
     )
 
   @moduleConfigPath: path.join(__dirname, '..', 'config', 'modules.json')
