@@ -1,6 +1,7 @@
 assert = require('chai').assert
 sinon  = require('sinon')
 git    = require('gift')
+path   = require('path')
 
 fs = require('fs')
 
@@ -82,7 +83,7 @@ test(".clone clones the module's repository and resolves the promise", (done) ->
 
     assert.strictEqual gitCloneArgs[0], repositoryUrl,
       "Expected git.clone to be called with the repository url"
-    assert.strictEqual gitCloneArgs[1], destinationDir,
+    assert.strictEqual gitCloneArgs[1], path.join(destinationDir, module.attributes.name),
       "Expected git.clone to be called with the destination directory"
 
     done()
@@ -90,4 +91,28 @@ test(".clone clones the module's repository and resolves the promise", (done) ->
     gitCloneStub.restore()
     done(err)
   )
+)
+
+test('.getReleases returns a list of non-deploy releases available', (done) ->
+  tags = [
+    {name: '0.1'}
+    {name: '0.2'}
+    {name: 'fancy-banana-actual-change-97d374758b'}
+  ]
+
+  module =
+    repository:
+      tags: sinon.spy( (callback) ->
+        callback(null, tags)
+      )
+
+  Module::getReleases.call(module).then( (releases) ->
+    assert.lengthOf releases, 2,
+      'Expected two releases to be returned'
+
+    assert.deepEqual releases, tags[0..1],
+      "Expected only non-deploy releases to be returned"
+
+    done()
+  ).catch(done)
 )

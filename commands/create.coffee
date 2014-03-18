@@ -3,29 +3,22 @@ inquirer = require 'inquirer'
 
 Module = require('../models/module')
 
+ModuleQuestioner  = require('../lib/modules')
+ReleaseQuestioner = require('../lib/releases')
+
 exports.create = (instanceName) ->
   fs.mkdirSync(instanceName)
 
-  availableModules = Module.all().map( (module) -> module.attributes )
+  availableModules = Module.all()
 
-  inquirer.prompt([{
-    type: 'checkbox'
-    name: 'required_modules'
-    message: 'Select the modules to import for this instance:'
-    choices: availableModules
-  }], (answers)->
-    modulesToClone = answers.required_modules
-
-    modulesToClone.forEach( (moduleName) ->
-      module = Module.findByName(moduleName)
-
-      console.log "Cloning #{moduleName}"
-      module
-        .clone(instanceName)
-        .then( -> console.log "Cloned #{moduleName}")
-        .catch( (err) ->
-          console.log(err);
-          console.log "Cloning #{moduleName} failed"
-        )
+  ModuleQuestioner
+    .ask(availableModules)
+    .then(ReleaseQuestioner.ask)
+    .then( (modules) ->
+      modules.forEach( (module) ->
+        console.log module.attributes
+      )
+    ).catch( (err) ->
+      console.log "### ERRROR"
+      console.log err
     )
-  )
