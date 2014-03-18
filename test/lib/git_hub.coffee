@@ -2,7 +2,7 @@ assert  = require('chai').assert
 sinon   = require('sinon')
 request = require('request')
 
-GitHub = require('../lib/git_hub.coffee')
+GitHub = require('../../lib/git_hub.coffee')
 
 suite('GitHub')
 

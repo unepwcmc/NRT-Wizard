@@ -6,8 +6,8 @@ path   = require('path')
 fs = require('fs')
 Promise = require('bluebird')
 
-Module = require('../models/module')
-GitHub = require('../lib/git_hub')
+Module = require('../../models/module')
+GitHub = require('../../lib/git_hub')
 
 suite('Module model')
 
