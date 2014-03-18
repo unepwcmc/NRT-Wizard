@@ -10,10 +10,13 @@ module.exports = class Module
   clone: (destinationDir) ->
     return new Promise( (resolve, reject) =>
       repoUrl = @attributes.repository_url
-      git.clone(repoUrl, destinationDir, (err, repo) ->
+      repoDirectory = path.join(destinationDir, @attributes.name)
+
+      git.clone(repoUrl, repoDirectory, (err, repo) =>
         return reject(err) if err?
 
-        resolve()
+        @repository = repo
+        resolve(repo)
       )
     )
 

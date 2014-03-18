@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "NRT Instance Manager",
   "main": "index.js",
+  "bin": {
+    "nrt": "index.coffee"
+  },
   "scripts": {
     "test": "NODE_ENV=test mocha"
   },

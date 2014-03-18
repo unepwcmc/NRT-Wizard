@@ -18,6 +18,14 @@ exports.create = (instanceName) ->
 
     modulesToClone.forEach( (moduleName) ->
       module = Module.findByName(moduleName)
-      module.clone()
+
+      console.log "Cloning #{moduleName}"
+      module
+        .clone(instanceName)
+        .then( -> console.log "Cloned #{moduleName}")
+        .catch( (err) ->
+          console.log(err);
+          console.log "Cloning #{moduleName} failed"
+        )
     )
   )
