@@ -4,7 +4,7 @@
   "description": "NRT Instance Manager",
   "main": "index.js",
   "bin": {
-    "nrt": "index.coffee"
+    "nrt": "./bin/wizard.coffee"
   },
   "scripts": {
     "test": "NODE_ENV=test mocha"
