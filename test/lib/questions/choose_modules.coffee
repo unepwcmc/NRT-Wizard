@@ -2,8 +2,8 @@ assert = require('chai').assert
 inquirer = require('inquirer')
 sinon    = require('sinon')
 
-ModuleQuestioner = require('../../lib/modules_questioner')
-Module = require('../../models/module')
+ChooseModuleQuestion  = require('../../../lib/questions/choose_modules')
+Module = require('../../../models/module')
 
 suite('ModuleQuestioner')
 
@@ -18,7 +18,7 @@ test('.ask returns an array of module instances selected by the user', (done) ->
   )
 
   try
-    ModuleQuestioner.ask(modules).then( (returnedModules) ->
+    ChooseModuleQuestion.ask(modules).then( (returnedModules) ->
       assert.lengthOf returnedModules, 1,
         'Expected only one module to be selected'
 

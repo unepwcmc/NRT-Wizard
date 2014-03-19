@@ -2,7 +2,7 @@ inquirer = require 'inquirer'
 Promise  = require 'bluebird'
 _        = require 'underscore'
 
-Module = require '../models/module'
+Module = require '../../models/module'
 
 exports.ask = (modules) ->
   choices = modules.map( (module) -> module.attributes )

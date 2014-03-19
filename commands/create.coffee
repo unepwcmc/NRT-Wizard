@@ -4,8 +4,8 @@ async    = require 'async'
 
 Module = require('../models/module')
 
-ModuleQuestioner  = require('../lib/modules_questioner')
-ReleaseQuestioner = require('../lib/releases_questioner')
+ChooseModuleQuestion  = require('../lib/questions/choose_modules')
+ChooseReleaseQuestion = require('../lib/questions/choose_releases')
 
 exports.create = (instanceName) ->
   fs.mkdirSync(instanceName)
@@ -23,9 +23,9 @@ exports.create = (instanceName) ->
 
   availableModules = Module.all()
 
-  ModuleQuestioner
+  ChooseModuleQuestion
     .ask(availableModules)
-    .then(ReleaseQuestioner.ask)
+    .then(ChooseReleaseQuestion.ask)
     .then( (modules) ->
       async.eachSeries(modules, installModule, (err) ->
         return console.log "ERROR: #{err}" if err?
