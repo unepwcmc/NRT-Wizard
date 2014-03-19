@@ -102,6 +102,12 @@ test('.getReleases returns a list of non-deploy releases available', (done) ->
     'fancy-banana-actual-change-97d374758b'
   ]
 
+  expectedTags = [
+    'tags/0.1'
+    'tags/0.2'
+    'master'
+  ]
+
   module =
     attributes:
       github:
@@ -116,10 +122,10 @@ test('.getReleases returns a list of non-deploy releases available', (done) ->
 
   try
     Module::getReleases.call(module).then( (releases) ->
-      assert.lengthOf releases, 2,
+      assert.lengthOf releases, 3,
         'Expected two releases to be returned'
 
-      assert.deepEqual releases, tags[0..1],
+      assert.deepEqual releases, expectedTags,
         "Expected only non-deploy releases to be returned"
 
       done()

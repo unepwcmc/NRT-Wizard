@@ -51,8 +51,10 @@ module.exports = class Module
         nonDeployTags = _.reject(releases, (release) ->
           /(.*)-[0-9a-f]{10}$/.test(release)
         )
+        tags = nonDeployTags.map (tag) -> "tags/#{tag}"
+        tags.push 'master'
 
-        resolve(nonDeployTags)
+        resolve(tags)
       ).catch(reject)
     )
 
