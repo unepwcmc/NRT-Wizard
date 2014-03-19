@@ -2,27 +2,27 @@ assert = require('chai').assert
 inquirer = require('inquirer')
 sinon    = require('sinon')
 
-ChooseModuleQuestion  = require('../../../lib/questions/choose_modules')
-Module = require('../../../models/module')
+ChooseComponentQuestion  = require('../../../lib/questions/choose_components')
+Component = require('../../../models/component')
 
-suite('ModuleQuestioner')
+suite('ComponentQuestioner')
 
-test('.ask returns an array of module instances selected by the user', (done) ->
-  modules = [
-    new Module(name: 'hats')
-    new Module(name: 'boats')
+test('.ask returns an array of component instances selected by the user', (done) ->
+  components = [
+    new Component(name: 'hats')
+    new Component(name: 'boats')
   ]
 
   promptStub = sinon.stub(inquirer, 'prompt', (options, callback) ->
-    callback(required_modules: ['hats'])
+    callback(required_components: ['hats'])
   )
 
   try
-    ChooseModuleQuestion.ask(modules).then( (returnedModules) ->
-      assert.lengthOf returnedModules, 1,
-        'Expected only one module to be selected'
+    ChooseComponentQuestion.ask(components).then( (returnedComponents) ->
+      assert.lengthOf returnedComponents, 1,
+        'Expected only one component to be selected'
 
-      assert.deepEqual returnedModules[0], modules[0]
+      assert.deepEqual returnedComponents[0], components[0]
 
       done()
     ).catch( (err) ->

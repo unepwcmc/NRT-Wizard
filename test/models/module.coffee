@@ -6,71 +6,71 @@ path   = require('path')
 fs = require('fs')
 Promise = require('bluebird')
 
-Module = require('../../models/module')
+Component = require('../../models/component')
 GitHub = require('../../lib/git_hub')
 
-suite('Module model')
+suite('Component model')
 
-test('#all returns all modules available', ->
-  expectedModules = [{name: "Reporting"}]
-  expectedModuleInstances = [new Module(expectedModules[0])]
+test('#all returns all components available', ->
+  expectedComponents = [{name: "Reporting"}]
+  expectedComponentInstances = [new Component(expectedComponents[0])]
 
-  readFileStub = sinon.stub(fs, 'readFileSync', -> JSON.stringify(expectedModules))
+  readFileStub = sinon.stub(fs, 'readFileSync', -> JSON.stringify(expectedComponents))
 
   try
-    assert.deepEqual Module.all(), expectedModuleInstances
+    assert.deepEqual Component.all(), expectedComponentInstances
   finally
     readFileStub.restore()
 )
 
-test('new Module() creates a new Module instance with the given attributes', ->
+test('new Component() creates a new Component instance with the given attributes', ->
   attributes =
     name: 'Reporting'
     repository_url: 'http://github.com/the_codes'
 
-  module = new Module(attributes)
+  component = new Component(attributes)
 
-  assert.strictEqual module.constructor.name, "Module",
-    "Expected a Module class instance to be created"
+  assert.strictEqual component.constructor.name, "Component",
+    "Expected a Component class instance to be created"
 
-  assert.property module.attributes, 'name',
-    "Expected module instance to have property name"
+  assert.property component.attributes, 'name',
+    "Expected component instance to have property name"
 
-  assert.strictEqual module.attributes.name, attributes.name,
-    "Expected module instance to have name property
-    '#{attributes.name}', but was '#{module.name}'"
+  assert.strictEqual component.attributes.name, attributes.name,
+    "Expected component instance to have name property
+    '#{attributes.name}', but was '#{component.name}'"
 )
 
-test('#findByName returns the first module matching the given name', ->
-  availableModules = [{
+test('#findByName returns the first component matching the given name', ->
+  availableComponents = [{
     name: 'Reporting'
   }, {
     name: 'Indicatorator'
   }]
 
-  readFileStub = sinon.stub(fs, 'readFileSync', -> JSON.stringify(availableModules))
+  readFileStub = sinon.stub(fs, 'readFileSync', -> JSON.stringify(availableComponents))
 
   try
-    module = Module.findByName('Reporting')
+    component = Component.findByName('Reporting')
 
-    assert.strictEqual module.constructor.name, "Module",
-      "Expected a Module class instance to be created"
+    assert.strictEqual component.constructor.name, "Component",
+      "Expected a Component class instance to be created"
 
-    assert.property module.attributes, 'name',
-      "Expected module instance to have property name"
+    assert.property component.attributes, 'name',
+      "Expected component instance to have property name"
 
-    assert.strictEqual module.attributes.name, availableModules[0].name,
-      "Expected module instance to have name property
-      '#{availableModules[0].name}', but was '#{module.name}'"
+    assert.strictEqual component.attributes.name, availableComponents[0].name,
+      "Expected component instance to have name property
+      '#{availableComponents[0].name}', but was '#{component.name}'"
   finally
     readFileStub.restore()
 )
 
-test(".clone clones the module's repository and resolves the promise", (done) ->
+test(".clone clones the component's repository and resolves the promise", (done) ->
   repositoryUrl = 'git.com/code'
   destinationDir = '/destination'
 
-  module = new Module(
+  component = new Component(
     name: 'Reporting'
     repository_url: repositoryUrl
   )
@@ -80,12 +80,12 @@ test(".clone clones the module's repository and resolves the promise", (done) ->
     callback()
   )
 
-  module.clone(destinationDir).then( (repo) ->
+  component.clone(destinationDir).then( (repo) ->
     gitCloneArgs = gitCloneStub.getCall(0).args
 
     assert.strictEqual gitCloneArgs[0], repositoryUrl,
       "Expected git.clone to be called with the repository url"
-    assert.strictEqual gitCloneArgs[1], path.join(destinationDir, module.attributes.name),
+    assert.strictEqual gitCloneArgs[1], path.join(destinationDir, component.attributes.name),
       "Expected git.clone to be called with the destination directory"
 
     done()
@@ -108,7 +108,7 @@ test('.getReleases returns a list of non-deploy releases available', (done) ->
     'master'
   ]
 
-  module =
+  component =
     attributes:
       github:
         username: 'itsme'
@@ -121,7 +121,7 @@ test('.getReleases returns a list of non-deploy releases available', (done) ->
   )
 
   try
-    Module::getReleases.call(module).then( (releases) ->
+    Component::getReleases.call(component).then( (releases) ->
       assert.lengthOf releases, 3,
         'Expected two releases to be returned'
 
@@ -142,11 +142,11 @@ test('.checkoutRelease checks out the given git refname', (done) ->
   refname = 'tags/a-release'
 
   checkoutSpy = sinon.spy( (tagName, callback) -> callback())
-  module =
+  component =
     repository:
       checkout: checkoutSpy
 
-  Module::checkoutRelease.call(module, refname).then( ->
+  Component::checkoutRelease.call(component, refname).then( ->
     assert.isTrue checkoutSpy.calledOnce,
       "Expected repository.checkout to be called once"
 
@@ -160,7 +160,7 @@ test('.checkoutRelease checks out the given git refname', (done) ->
 test('.setup calls clone with the destination directory and checks out
  the release', (done) ->
   releaseName = 'fancy-pineapple'
-  module =
+  component =
     attributes:
       release: releaseName
     clone: sinon.spy( ->
@@ -170,14 +170,14 @@ test('.setup calls clone with the destination directory and checks out
       new Promise( (resolve) -> resolve() )
     )
 
-  Module::setup.call(module, './aDirectory').then( ->
-    assert.strictEqual module.clone.callCount, 1,
-      "Expected module.clone to be called once"
+  Component::setup.call(component, './aDirectory').then( ->
+    assert.strictEqual component.clone.callCount, 1,
+      "Expected component.clone to be called once"
 
-    assert.strictEqual module.checkoutRelease.callCount, 1,
-      "Expected module.checkoutRelease to be called once"
+    assert.strictEqual component.checkoutRelease.callCount, 1,
+      "Expected component.checkoutRelease to be called once"
 
-    releaseArgs = module.checkoutRelease.getCall(0).args
+    releaseArgs = component.checkoutRelease.getCall(0).args
     assert.strictEqual releaseArgs[0], releaseName,
       "Expected checkoutRelease to be called with #{releaseName}, but was
       #{releaseArgs[0]}"

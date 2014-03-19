@@ -6,7 +6,7 @@ Promise = require 'bluebird'
 
 GitHub = require '../lib/git_hub'
 
-module.exports = class Module
+module.exports = class Component
   constructor: (@attributes) ->
 
   setup: (destinationDir) ->
@@ -55,19 +55,19 @@ module.exports = class Module
       ).catch(reject)
     )
 
-  @moduleConfigPath: path.join(__dirname, '..', 'config', 'modules.json')
+  @componentConfigPath: path.join(__dirname, '..', 'config', 'components.json')
 
   @findByName: (name) ->
-    availableModules = JSON.parse(fs.readFileSync(@moduleConfigPath))
-    moduleDefinition = _.findWhere(availableModules, name: name)
+    availableComponents = JSON.parse(fs.readFileSync(@componentConfigPath))
+    componentDefinition = _.findWhere(availableComponents, name: name)
 
-    if moduleDefinition?
-      return new Module(moduleDefinition)
+    if componentDefinition?
+      return new Component(componentDefinition)
     else
       return null
 
   @all: ->
-    moduleConfigPath = path.join(__dirname, '..', 'config', 'modules.json')
-    availableModules = JSON.parse(fs.readFileSync(moduleConfigPath))
+    componentConfigPath = path.join(__dirname, '..', 'config', 'components.json')
+    availableComponents = JSON.parse(fs.readFileSync(componentConfigPath))
 
-    return availableModules.map( (module) -> new Module(module) )
+    return availableComponents.map( (component) -> new Component(component) )

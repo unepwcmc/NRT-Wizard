@@ -2,34 +2,34 @@ fs       = require 'fs'
 inquirer = require 'inquirer'
 async    = require 'async'
 
-Module = require('../models/module')
+Component = require('../models/component')
 
-ChooseModuleQuestion  = require('../lib/questions/choose_modules')
+ChooseComponentQuestion  = require('../lib/questions/choose_components')
 ChooseReleaseQuestion = require('../lib/questions/choose_releases')
 
 exports.create = (instanceName) ->
   fs.mkdirSync(instanceName)
 
-  installModule = (module, callback) ->
-    console.log "Setting up #{module.attributes.name}..."
-    module.setup(instanceName).then( ->
-      console.log "Finished setting up #{module.attributes.name}"
+  installComponent = (component, callback) ->
+    console.log "Setting up #{component.attributes.name}..."
+    component.setup(instanceName).then( ->
+      console.log "Finished setting up #{component.attributes.name}"
       callback()
     ).catch( (err) ->
       console.log '### Error'
-      console.log "Could not setup #{module.attributes.name}"
+      console.log "Could not setup #{component.attributes.name}"
       callback(err)
     )
 
-  availableModules = Module.all()
+  availableComponents = Component.all()
 
-  ChooseModuleQuestion
-    .ask(availableModules)
+  ChooseComponentQuestion
+    .ask(availableComponents)
     .then(ChooseReleaseQuestion.ask)
-    .then( (modules) ->
-      async.eachSeries(modules, installModule, (err) ->
+    .then( (components) ->
+      async.eachSeries(components, installComponent, (err) ->
         return console.log "ERROR: #{err}" if err?
-        console.log 'Finished setting up modules'
+        console.log 'Finished setting up components'
       )
     ).catch( (err) ->
       console.log "### ERRROR"

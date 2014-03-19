@@ -5,7 +5,7 @@ git     = require('gift')
 
 pkg = require('../package.json')
 cli = require('../cli')
-Module = require('../models/module')
+Component = require('../models/component')
 
 fs = require('fs')
 inquirer = require('inquirer')
@@ -13,21 +13,21 @@ inquirer = require('inquirer')
 suite('NRT Wizard CLI')
 
 test('.create creates a NRT instance directory, and asks the user which
- modules to import', ->
-  availableModules = [{name: 'Reporting'}]
+ components to import', ->
+  availableComponents = [{name: 'Reporting'}]
 
   sandbox = sinon.sandbox.create()
 
   promptSpy = sandbox.stub(inquirer, 'prompt', (option, callback) ->)
   promptOptions = [{
     type: 'checkbox'
-    name: 'required_modules'
-    message: 'Select the modules to import for this instance:'
-    choices: availableModules
+    name: 'required_components'
+    message: 'Select the components to import for this instance:'
+    choices: availableComponents
   }]
 
   mkdirStub = sandbox.stub(fs, 'mkdirSync', ->)
-  readFileStub = sandbox.stub(fs, 'readFileSync', -> JSON.stringify(availableModules))
+  readFileStub = sandbox.stub(fs, 'readFileSync', -> JSON.stringify(availableComponents))
 
   cli.create('projectName')
 
