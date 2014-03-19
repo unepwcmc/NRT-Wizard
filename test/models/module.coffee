@@ -87,6 +87,8 @@ test(".clone clones the component's repository and resolves the promise", (done)
     assert.strictEqual gitCloneArgs[1], path.join(destinationDir, component.attributes.name),
       "Expected git.clone to be called with the destination directory"
 
+    assert.strictEqual component.attributes.directory, '/destination/Reporting'
+
     done()
   ).catch( (err) ->
     gitCloneStub.restore()
