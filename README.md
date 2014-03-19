@@ -1,8 +1,9 @@
 # NRT Wizard
 
 NRT Wizard is a toolset for easily creating NRT instances comprising
-of separate modules. The tools provided can be used to select modules,
-configure them and control what version of the NRT codebase is used.
+of separate components. The tools provided can be used to select
+components, configure them and control what version of the NRT codebase
+is used.
 
 ## Setup
 
@@ -18,11 +19,11 @@ npm install -g nrt-wizard
 To create an NRT instance:
 
 ```bash
-nrt create ./target_dir
+nrt create-instance ./target_dir
 ```
 
-## Modules
+## Components
 
-An NRT instance consists of several modules running individually. During
-setup, NRT Wizard will download the selected modules and install them
+An NRT instance consists of several components running individually. During
+setup, NRT Wizard will download the selected components and install them
 automatically.
