@@ -7,7 +7,7 @@ Component = require('../models/component')
 ChooseComponentQuestion  = require('../lib/questions/choose_components')
 ChooseReleaseQuestion = require('../lib/questions/choose_releases')
 
-exports.create = (instanceName) ->
+exports['create-instance'] = (instanceName) ->
   fs.mkdirSync(instanceName)
 
   installComponent = (component, callback) ->

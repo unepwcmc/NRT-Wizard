@@ -12,7 +12,7 @@ inquirer = require('inquirer')
 
 suite('NRT Wizard CLI')
 
-test('.create creates a NRT instance directory, and asks the user which
+test('.create-instance creates a NRT instance directory, and asks the user which
  components to import', ->
   availableComponents = [{name: 'Reporting'}]
 
@@ -29,7 +29,7 @@ test('.create creates a NRT instance directory, and asks the user which
   mkdirStub = sandbox.stub(fs, 'mkdirSync', ->)
   readFileStub = sandbox.stub(fs, 'readFileSync', -> JSON.stringify(availableComponents))
 
-  cli.create('projectName')
+  cli['create-instance']('projectName')
 
   try
     assert.isTrue mkdirStub.calledWith('projectName'),
