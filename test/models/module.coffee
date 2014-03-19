@@ -76,7 +76,6 @@ test(".clone clones the component's repository and resolves the promise", (done)
   )
 
   gitCloneStub = sinon.stub(git, 'clone', (remote, dest, callback) ->
-    console.log '#### Calling git clone'
     callback()
   )
 
