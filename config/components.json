@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Reporting",
+    "repository_url": "https://github.com/unepwcmc/NRT.git",
+    "github": {
+      "username": "unepwcmc",
+      "repository_name": "NRT"
+    }
+  }, {
+    "name": "Indicatorator",
+    "repository_url": "https://github.com/unepwcmc/Indicatorator.git",
+    "github": {
+      "username": "unepwcmc",
+      "repository_name": "Indicatorator"
+    }
+  }
+]

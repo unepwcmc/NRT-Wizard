@@ -3,9 +3,22 @@
   "version": "0.0.1",
   "description": "NRT Instance Manager",
   "main": "index.js",
+  "bin": {
+    "nrt": "./bin/wizard.coffee"
+  },
   "scripts": {
     "test": "NODE_ENV=test mocha"
   },
   "author": "UNEP-WCMC",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^1.9.0",
+    "sinon": "^1.9.0",
+    "underscore": "^1.6.0",
+    "inquirer": "^0.4.1",
+    "bluebird": "^1.1.0",
+    "gift": "^0.3.0",
+    "async": "^0.2.10",
+    "request": "^2.34.0"
+  }
 }
