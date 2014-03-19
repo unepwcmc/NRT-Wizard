@@ -156,3 +156,32 @@ test('.checkoutRelease checks out the given git refname', (done) ->
     done()
   ).catch(done)
 )
+
+test('.setup calls clone with the destination directory and checks out
+ the release', (done) ->
+  releaseName = 'fancy-pineapple'
+  module =
+    attributes:
+      release: releaseName
+    clone: sinon.spy( ->
+      new Promise( (resolve) -> resolve() )
+    )
+    checkoutRelease: sinon.spy( ->
+      new Promise( (resolve) -> resolve() )
+    )
+
+  Module::setup.call(module, './aDirectory').then( ->
+    assert.strictEqual module.clone.callCount, 1,
+      "Expected module.clone to be called once"
+
+    assert.strictEqual module.checkoutRelease.callCount, 1,
+      "Expected module.checkoutRelease to be called once"
+
+    releaseArgs = module.checkoutRelease.getCall(0).args
+    assert.strictEqual releaseArgs[0], releaseName,
+      "Expected checkoutRelease to be called with #{releaseName}, but was
+      #{releaseArgs[0]}"
+
+    done()
+  ).catch(done)
+)

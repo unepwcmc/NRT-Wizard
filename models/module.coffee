@@ -12,9 +12,6 @@ module.exports = class Module
   setup: (destinationDir) ->
     new Promise( (resolve, reject) =>
       @clone(destinationDir).then( =>
-        unless @attributes.release?
-          return resolve()
-
         @checkoutRelease(@attributes.release)
       ).then(resolve).catch(reject)
     )
