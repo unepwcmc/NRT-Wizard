@@ -2,7 +2,7 @@ assert = require('chai').assert
 inquirer = require('inquirer')
 sinon    = require('sinon')
 
-ModuleQuestioner = require('../../lib/modules')
+ModuleQuestioner = require('../../lib/modules_questioner')
 Module = require('../../models/module')
 
 suite('ModuleQuestioner')
