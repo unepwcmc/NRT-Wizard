@@ -9,6 +9,16 @@ GitHub = require '../lib/git_hub'
 module.exports = class Module
   constructor: (@attributes) ->
 
+  setup: (destinationDir) ->
+    new Promise( (resolve, reject) =>
+      @clone(destinationDir).then( =>
+        unless @attributes.release?
+          return resolve()
+
+        @checkoutRelease(@attributes.release)
+      ).then(resolve).catch(reject)
+    )
+
   clone: (destinationDir) ->
     return new Promise( (resolve, reject) =>
       repoUrl = @attributes.repository_url
