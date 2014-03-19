@@ -14,6 +14,12 @@ example in Docker or by a provisioning script.
 npm install -g nrt-wizard
 ```
 
+In development, instead clone this repo and run:
+
+```bash
+npm install -g
+```
+
 ## Usage
 
 To create an NRT instance:
