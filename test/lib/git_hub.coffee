@@ -40,7 +40,11 @@ test('.releases returns the releases listed by the GitHub API', (done) ->
       assert.deepEqual releases, expectedReleases
 
       done()
-    ).catch(done)
-  finally
+    ).catch( (err) ->
+      requestStub.restore()
+      done(err)
+    )
+  catch err
+    done(err)
     requestStub.restore()
 )
