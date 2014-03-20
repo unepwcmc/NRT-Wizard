@@ -18,7 +18,7 @@ test('#install, given a Component instance, reads the component
   )
 
   originalPlatform = process.platform
-  process.platform = 'osx'
+  process.platform = 'darwin'
 
   componentConfig = {
     setup:
@@ -33,16 +33,16 @@ test('#install, given a Component instance, reads the component
     )
   )
   existsStub = sandbox.stub(fs, 'existsSync', -> true)
+  chdirStub = sandbox.stub(process, 'chdir', ->)
 
-  console.log 'making spawn stub'
   spawnStub = sandbox.stub(CommandRunner, 'spawn', (command) ->
     return {
       on: (state, callback) -> callback()
     }
   )
 
-  try
-    ComponentInstaller.install(component).then( ->
+  ComponentInstaller.install(component).then( ->
+    try
       assert.strictEqual readFileStub.callCount, 1,
         "Expected readFileSync to be called once"
 
@@ -58,16 +58,16 @@ test('#install, given a Component instance, reads the component
         "Expected CommandRunner.spawn to be called with 'an command'"
 
       done()
-    ).catch( (err) ->
+    catch err
+      done(err)
+    finally
       sandbox.restore()
       process.platform = originalPlatform
-      done(err)
-    )
-  catch err
-    done(err)
-  finally
+  ).catch( (err) ->
     sandbox.restore()
     process.platform = originalPlatform
+    done(err)
+  )
 )
 
 test('#install throws an error if the component package.json does not exist', (done) ->
@@ -129,4 +129,3 @@ test('#install throws an error if the component package.json does not
     return done()
   )
 )
-
