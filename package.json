@@ -7,6 +7,7 @@
     "nrt": "./bin/wizard.coffee"
   },
   "scripts": {
+    "deploy": "cd config/deploy && ansible-playbook -i hosts site.yml",
     "test": "NODE_ENV=test mocha"
   },
   "author": "UNEP-WCMC",
