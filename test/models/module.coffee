@@ -76,7 +76,6 @@ test(".clone clones the component's repository and resolves the promise", (done)
   )
 
   gitCloneStub = sinon.stub(git, 'clone', (remote, dest, callback) ->
-    console.log '#### Calling git clone'
     callback()
   )
 
@@ -87,6 +86,8 @@ test(".clone clones the component's repository and resolves the promise", (done)
       "Expected git.clone to be called with the repository url"
     assert.strictEqual gitCloneArgs[1], path.join(destinationDir, component.attributes.name),
       "Expected git.clone to be called with the destination directory"
+
+    assert.strictEqual component.attributes.directory, '/destination/Reporting'
 
     done()
   ).catch( (err) ->

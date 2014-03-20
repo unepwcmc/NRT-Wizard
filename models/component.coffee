@@ -20,6 +20,7 @@ module.exports = class Component
     return new Promise( (resolve, reject) =>
       repoUrl = @attributes.repository_url
       repoDirectory = path.join(destinationDir, @attributes.name)
+      @attributes.directory = repoDirectory
 
       git.clone(repoUrl, repoDirectory, (err, repo) =>
         return reject(err) if err?
