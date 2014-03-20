@@ -108,6 +108,9 @@ test('#install throws an error if the component package.json does not
 
   sandbox = sinon.sandbox.create()
 
+  osName = "osx"
+  sandbox.stub(process, 'platform', 'darwin')
+
   readFileStub = sandbox.stub(fs, 'readFileAsync', ->
     new Promise( (resolve, reject) ->
       resolve(JSON.stringify({}))
@@ -123,7 +126,7 @@ test('#install throws an error if the component package.json does not
 
     assert.strictEqual(
       err,
-      "here does not define a 'setup' command in the package.json"
+      "here does not define a 'setup' command for your OS (#{osName}) in the package.json"
     )
 
     return done()

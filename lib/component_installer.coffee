@@ -38,7 +38,7 @@ exports.install = (component) ->
 
       unless configSupportsOS(pkg)
         return reject(
-          "#{component.attributes.name} does not define a 'setup' command in the package.json"
+          "#{component.attributes.name} does not define a 'setup' command for your OS (#{normalisedOS()}) in the package.json"
         )
 
       currentDir = process.cwd()
