@@ -33,3 +33,25 @@ nrt create-instance ./target_dir
 An NRT instance consists of several components running individually. During
 setup, NRT Wizard will download the selected components and install them
 automatically.
+
+### Installation
+
+Components are responsible for specifying how they are installed for each
+platform. A general good practice is combining these dependencies in to a
+script that installs the requirements in a platform-dependent script file, such
+as a `.bat` or `.sh`.
+
+Add a `setup` attribute to `scripts` in your package.json. The attribute
+should define a command to run for each platform when NRT Wizard clones the
+repository, for example:
+
+```json
+{
+  "scripts": {
+    "setup": {
+      "osx": "coffee bin/setup.coffee",
+      "win": "cmd.exe \c coffee bin/setup.coffee",
+      "unix": "/bin/sh ./install.sh"
+  }
+}
+```
