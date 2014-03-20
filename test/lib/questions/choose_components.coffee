@@ -5,7 +5,7 @@ sinon    = require('sinon')
 ChooseComponentQuestion  = require('../../../lib/questions/choose_components')
 Component = require('../../../models/component')
 
-suite('ComponentQuestioner')
+suite('ChooseComponentQuestion')
 
 test('.ask returns an array of component instances selected by the user', (done) ->
   components = [
