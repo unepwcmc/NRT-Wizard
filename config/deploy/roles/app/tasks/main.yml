@@ -1,0 +1,4 @@
+---
+
+- name: npm install wizard
+  npm: name=nrt-wizard global=yes

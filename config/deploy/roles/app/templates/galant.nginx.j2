@@ -1,0 +1,22 @@
+ upstream galant_localhost {
+   server 127.0.0.1:8004;
+ }
+
+ server {
+   listen       80;
+   server_name  books.kobayashi.cyanoryx.com books.koby.cyanoryx.com;
+
+   error_log  /var/log/nginx/galant.kobayashi.error.log;
+   access_log  /var/log/nginx/galant.kobayashi.access.log;
+   root  /var/www/galant/public;
+
+   location / {
+     proxy_set_header X-Real-IP $remote_addr;
+     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     proxy_set_header Host $http_host;
+     proxy_set_header X-NginX-Proxy true;
+
+     proxy_pass http://galant_localhost/;
+     proxy_redirect off;
+   }
+ }
