@@ -4,6 +4,7 @@ Promise = require('bluebird')
 
 fs = require('fs')
 
+CommandRunner = require('../../lib/command_runner')
 ComponentInstaller = require('../../lib/component_installer')
 Component = require('../../models/component.coffee')
 
@@ -33,6 +34,13 @@ test('#install, given a Component instance, reads the component
   )
   existsStub = sandbox.stub(fs, 'existsSync', -> true)
 
+  console.log 'making spawn stub'
+  spawnStub = sandbox.stub(CommandRunner, 'spawn', (command) ->
+    return {
+      on: (state, callback) -> callback()
+    }
+  )
+
   try
     ComponentInstaller.install(component).then( ->
       assert.strictEqual readFileStub.callCount, 1,
@@ -41,6 +49,13 @@ test('#install, given a Component instance, reads the component
       readFileArgs = readFileStub.getCall(0).args
       assert.strictEqual readFileArgs[0], "/over/here/package.json",
         "Expected readFileSync to be called with the path to the package.json"
+
+      assert.strictEqual spawnStub.callCount, 1,
+        "Expected CommandRunner.spawn to be called once"
+
+      spawnArgs = spawnStub.getCall(0).args
+      assert.strictEqual spawnArgs[0], 'an command',
+        "Expected CommandRunner.spawn to be called with 'an command'"
 
       done()
     ).catch( (err) ->

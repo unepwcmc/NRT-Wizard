@@ -1,6 +1,7 @@
 path = require('path')
 Promise = require('bluebird')
 fs = Promise.promisifyAll(require('fs'))
+CommandRunner = require('./command_runner')
 
 usingWindows = ->
   return new RegExp("^win").test(process.platform)
@@ -16,9 +17,12 @@ normalisedOS = ->
   else
     return 'unix'
 
-configSupportsOS = (config) ->
+getSetupFromConfig = (config) ->
   setupKey = normalisedOS()
-  return config.setup?[setupKey]?
+  return config.setup?[setupKey]
+
+configSupportsOS = (config) ->
+  return getSetupFromConfig(config)?
 
 exports.install = (component) ->
   new Promise( (resolve, reject) ->
@@ -37,6 +41,20 @@ exports.install = (component) ->
           "#{component.attributes.name} does not define a 'setup' command in the package.json"
         )
 
-      resolve()
+      currentDir = process.cwd()
+      process.chdir(component.attributes.directory)
+
+      setupCommand = getSetupFromConfig(pkg)
+      setupProcess = CommandRunner.spawn(setupCommand)
+
+      setupProcess.on('close', (code) ->
+        if code > 0
+          return reject(new Error(
+            "Installing #{component.attributes.name} failed with error code #{code}"
+          ))
+
+        process.chdir(currentDir)
+        resolve()
+      )
     )
   )
