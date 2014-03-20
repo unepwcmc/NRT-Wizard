@@ -28,6 +28,22 @@ To create an NRT instance:
 nrt create-instance ./target_dir
 ```
 
+## Deployment
+
+NRT Wizard depends on NodeJS and Redis. There is an Ansible deploy
+command available to install these automatically for you on Unix boxes
+(the only requirement is that SSH is available).
+
+Add your new host to `config/deploy/hosts`:
+
+```ini
+[web]
+192.168.0.1
+```
+
+And run `npm run deploy`. Ansible will connect to the server, install
+the required dependencies and install NRT Wizard.
+
 ## Components
 
 An NRT instance consists of several components running individually. During
