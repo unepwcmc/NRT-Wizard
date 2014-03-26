@@ -20,6 +20,7 @@
     "gift": "^0.3.0",
     "async": "^0.2.10",
     "request": "^2.34.0",
-    "shell-quote": "^1.4.1"
+    "shell-quote": "^1.4.1",
+    "redis": "^0.10.1"
   }
 }
