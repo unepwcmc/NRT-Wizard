@@ -8,6 +8,8 @@ ComponentInstaller = require('../lib/component_installer')
 ChooseComponentQuestion  = require('../lib/questions/choose_components')
 ChooseReleaseQuestion = require('../lib/questions/choose_releases')
 
+Cli = require('../cli')
+
 exports['create-instance'] = (instanceName) ->
   fs.mkdirSync(instanceName)
 
@@ -35,8 +37,15 @@ exports['create-instance'] = (instanceName) ->
       async.eachSeries(components, installComponent, (err) ->
         return console.log err if err?
         console.log 'Finished setting up components'
+
+        console.log '########'
+        console.log 'Booting servers'
+
+        process.chdir(instanceName)
+        Cli.start()
       )
     ).catch( (err) ->
       console.log "### ERRROR"
       console.log err
+      console.log err.stack
     )
