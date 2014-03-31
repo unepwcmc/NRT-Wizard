@@ -12,7 +12,7 @@ exports['create-instance'] = (instanceName) ->
   fs.mkdirSync(instanceName)
 
   installComponent = (component, callback) ->
-    console.log "Setting up #{component.attributes.name}..."
+    console.log "Setting up #{component.attributes.name}"
     component.setup(instanceName).then( ->
       console.log "Finished setting up #{component.attributes.name}"
       console.log "Going to run installer..."

@@ -7,8 +7,6 @@ Redis = require('redis')
 
 suite 'MessageServer'
 
-test('.on waits for a question and fires an event')
-
 test('new MessageServer generates an ID for the queue, and subscribes to it', ->
   serverId = 'abcd'
 

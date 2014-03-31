@@ -1,5 +1,6 @@
 fs = require 'fs'
 path = require 'path'
+inquirer = require 'inquirer'
 
 MessageServer = require('../lib/message_server')
 
@@ -20,9 +21,5 @@ exports.configure = ->
   child_process.execAsync("redis-server &").then( (stdout, stderr) ->
     messageServer = new MessageServer()
     messageServer.on('question', (question) ->
-      # pass question to adapter
-      # adapter.ask('').then( publish answer )
     )
   )
-
-exports.configure()
